@@ -1,26 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>CV Builder</title>
 
 <style>
-body{font-family:Arial;background:#eee}
-.container{width:1000px;margin:auto;background:#fff;padding:20px}
-input,textarea,select{width:100%;padding:6px;margin:4px 0}
-button{padding:10px 16px;background:#000;color:#fff;border:none;cursor:pointer}
-
-#cv{display:none;padding:20px}
-.name{font-size:30px;font-weight:bold;text-transform:uppercase}
-.small{font-size:14px}
-.section{margin-top:12px}
-.photo{width:120px;height:140px;border:1px solid #000;object-fit:cover}
-
-@media print{
-body{background:#fff}
-.container>*:not(#cv){display:none}
-#cv{display:block}
+body{
+  font-family:"Times New Roman",serif;
+  background:#eee;
 }
+.container{
+  width:900px;
+  margin:20px auto;
+  background:#fff;
+  padding:20px;
+}
+
+/* FORM */
+input,textarea,select{
+  width:100%;
+  padding:6px;
+  margin:4px 0;
+}
+button{
+  padding:10px 18px;
+  background:#003399;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+
+/* CV */
+#cv{
+  display:none;
+  border:2px solid #003399;
+  padding:20px;
+}
+#cv{
+  display:none;
+  border:4px solid #003399;
+  padding:20px;
+}
+/* NAME */
+.cv-name{
+  text-align:center;
+  font-size:36px;
+  font-weight:bold;
+  color:#003399;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.hobby-box{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.hobby-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border:2px solid #003399;
+  border-radius:6px;
+  font-size:15px;
+  cursor:pointer;
+  color:#003399;
+  background:#f8fbff;
+}
+
+.hobby-item.selected{
+  background:#003399;
+  color:#fff;
+}
+.skill-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.skill-row select{
+  padding:5px;
+}
+
+/* Skill container grid */
+#cvSkill{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr); /* 2টা এক লাইনে */
+  gap:14px;
+}
+
+.skill-bar{
+  width:100%;
+  height:12px;
+  border:1px solid #000;
+  margin-top:4px;
+}
+
+.skill-fill{
+  height:100%;
+  background:#5b9bd5;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+}
+.header-left{
+  width:72%;
+}
+.header-row{
+  display:flex;
+  font-size:15px;
+  margin:3px 0;
+}
+.header-label{width:180px;font-weight:bold}
+.header-colon{width:20px}
+.header-value{flex:1}
+
+.photo{
+  width:120px;
+  height:140px;
+  border:1px solid #000;
+  object-fit:cover;
+}
+
+/* SECTION */
+.section{margin-top:16px}
+.section-title{
+  font-weight:bold;
+  color:#003399;
+  font-size:16px;
+}
+.section-line{
+  border-bottom:4px solid #003399;
+  margin:4px 0 8px;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+table,th,td{border:1px solid #000}
+th,td{padding:6px}
+
+/* LANGUAGE INPUT */
+.langRow{
+  border:1px solid #000;
+  padding:6px;
+  margin-bottom:6px;
+}
+
+/* PRINT */
+@media print{
+  body{background:#fff}
+
+  /* FORM hide হবে */
+  .container > *:not(#cv){
+    display:none !important;
+  }
+@media print{
+  *{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+  /* শুধু CV দেখাবে */
+  #cv{
+    display:block !important;
+  }
+}
+
 </style>
 </head>
 
@@ -31,141 +185,1115 @@ body{background:#fff}
 
 <input id="name" placeholder="Full Name">
 <input id="father" placeholder="C/O (Father's Name)">
-<input id="phone" placeholder="Phone">
-<input id="email" placeholder="Email">
-<textarea id="address" placeholder="Address"></textarea>
+<div style="display:flex; gap:6px;">
+  <select id="dobDay">
+    <option value="">Day</option>
+    <script>
+      for(let d=1; d<=31; d++){
+        document.write(`<option>${d}</option>`);
+      }
+function toggleHobby(el){
+  el.classList.toggle("selected");
+}
+
+function showOtherHobby(){
+  document.getElementById("otherHobbyBox").style.display = "block";
+}
+
+function addOtherHobby(){
+  let val = document.getElementById("otherHobbyInput").value.trim();
+  if(val==="") return;
+
+  let div = document.createElement("div");
+  div.className = "hobby-item selected";
+  div.innerText = "⭐ " + val;
+  div.onclick = function(){ toggleHobby(div); };
+
+  document.getElementById("hobbyBox").appendChild(div);
+  document.getElementById("otherHobbyInput").value = "";
+  document.getElementById("otherHobbyBox").style.display = "none";
+}
+function addSkill(){
+  let div = document.createElement("div");
+  div.className = "skill-row";
+  div.innerHTML = `
+    <select class="skillName" onchange="toggleOtherSkill(this)">
+  <!-- Office & Computer -->
+  <option>MS Word</option>
+  <option>MS Excel</option>
+  <option>MS PowerPoint</option>
+  <option>MS Outlook</option>
+  <option>Google Docs</option>
+  <option>Google Sheets</option>
+  <option>Google Slides</option>
+  <option>Typing (English)</option>
+  <option>Typing (Bengali)</option>
+  <option>Data Entry</option>
+
+  <!-- Programming & IT -->
+  <option>C Programming</option>
+  <option>C++</option>
+  <option>Java</option>
+  <option>Python</option>
+  <option>JavaScript</option>
+  <option>HTML</option>
+  <option>CSS</option>
+  <option>Bootstrap</option>
+  <option>React JS</option>
+  <option>Node JS</option>
+  <option>PHP</option>
+  <option>MySQL</option>
+  <option>MongoDB</option>
+  <option>Web Development</option>
+  <option>App Development</option>
+  <option>Game Development</option>
+  <option>Software Testing</option>
+  <option>Ethical Hacking</option>
+  <option>Cyber Security</option>
+  <option>AI / Machine Learning</option>
+  <option>Data Science</option>
+
+  <!-- Design & Creative -->
+  <option>Photoshop</option>
+  <option>Illustrator</option>
+  <option>CorelDRAW</option>
+  <option>Canva</option>
+  <option>UI / UX Design</option>
+  <option>Graphic Design</option>
+  <option>Video Editing</option>
+  <option>Photo Editing</option>
+  <option>Animation</option>
+  <option>3D Modeling</option>
+  <option>Cinematography</option>
+  <option>Photography</option>
+
+  <!-- Digital Marketing -->
+  <option>Digital Marketing</option>
+  <option>SEO</option>
+  <option>SEM</option>
+  <option>Social Media Marketing</option>
+  <option>Content Marketing</option>
+  <option>Email Marketing</option>
+  <option>Google Ads</option>
+  <option>Facebook Ads</option>
+  <option>Affiliate Marketing</option>
+  <option>Influencer Marketing</option>
+
+  <!-- Language Skills -->
+  <option>English Speaking</option>
+  <option>English Writing</option>
+  <option>Hindi Speaking</option>
+  <option>Bengali Speaking</option>
+  <option>Bengali Writing</option>
+  <option>Translation</option>
+  <option>Content Writing</option>
+  <option>Copywriting</option>
+  <option>Proofreading</option>
+
+  <!-- Soft Skills -->
+  <option>Communication Skills</option>
+  <option>Public Speaking</option>
+  <option>Presentation Skills</option>
+  <option>Leadership</option>
+  <option>Teamwork</option>
+  <option>Problem Solving</option>
+  <option>Critical Thinking</option>
+  <option>Time Management</option>
+  <option>Decision Making</option>
+  <option>Innovative Thinking</option>
+  <option>Creativity</option>
+  <option>Adaptability</option>
+
+  <!-- Business & Finance -->
+  <option>Accounting</option>
+  <option>Tally</option>
+  <option>GST</option>
+  <option>Bookkeeping</option>
+  <option>Stock Market</option>
+  <option>Trading</option>
+  <option>Investment Analysis</option>
+  <option>Business Management</option>
+  <option>Entrepreneurship</option>
+  <option>Sales</option>
+  <option>Marketing</option>
+
+  <!-- Technical / Trade -->
+  <option>Computer Hardware</option>
+  <option>Networking</option>
+  <option>CCTV Installation</option>
+  <option>Mobile Repairing</option>
+  <option>Electrician</option>
+  <option>Plumbing</option>
+  <option>AC Technician</option>
+  <option>Welding</option>
+  <option>AutoCAD</option>
+
+  <!-- Education & Teaching -->
+  <option>Teaching</option>
+  <option>Online Tutoring</option>
+  <option>Curriculum Design</option>
+  <option>Student Counseling</option>
+
+  <!-- Media & Content -->
+  <option>Blogging</option>
+  <option>Vlogging</option>
+  <option>YouTube Content Creation</option>
+  <option>Podcasting</option>
+  <option>Script Writing</option>
+  <option>Storytelling</option>
+
+  <!-- Personal Development -->
+  <option>Research Skills</option>
+  <option>Analytical Skills</option>
+  <option>Negotiation</option>
+  <option>Emotional Intelligence</option>
+  <option>Stress Management</option>
+<option value="other">Other</option>
+    </select>
+
+    <input type="text"
+           class="otherSkillInput"
+           placeholder="Enter skill"
+           style="display:none; width:140px;">
+
+    <select class="skillPercent">
+  <option value="10">10%</option>
+  <option value="20">20%</option>
+  <option value="30">30%</option>
+  <option value="40">40%</option>
+  <option value="50">50%</option>
+  <option value="60">60%</option>
+  <option value="70">70%</option>
+  <option value="80">80%</option>
+  <option value="90">90%</option>
+  <option value="100">100%</option>
+ </select>
+  `;
+  document.getElementById("skillBox").appendChild(div);
+}
+function toggleOtherSkill(selectEl){
+  let otherInput = selectEl.parentElement.querySelector(".otherSkillInput");
+  if(selectEl.value === "other"){
+    otherInput.style.display = "inline-block";
+  }else{
+    otherInput.style.display = "none";
+    otherInput.value = "";
+  }
+}function toggleOtherEdu(selectEl){
+  let otherInput = selectEl.parentElement.querySelector(".otherEduInput");
+  if(selectEl.value === "other"){
+    otherInput.style.display = "inline-block";
+  }else{
+    otherInput.style.display = "none";
+    otherInput.value = "";
+  }
+}
+
+    </script>
+  </select>
+
+  <select id="dobMonth">
+    <option value="">Month</option>
+    <option>Jan</option>
+    <option>Feb</option>
+    <option>Mar</option>
+    <option>Apr</option>
+    <option>May</option>
+    <option>Jun</option>
+    <option>Jul</option>
+    <option>Aug</option>
+    <option>Sep</option>
+    <option>Oct</option>
+    <option>Nov</option>
+    <option>Dec</option>
+  </select>
+
+  <select id="dobYear">
+    <option value="">Year</option>
+    <script>
+      for(let y=1950; y<=2026; y++){
+        document.write(`<option>${y}</option>`);
+      }
+    </script>
+  </select>
+</div>
+
+<textarea id="address" placeholder="Permanent Address"></textarea>
+<input id="phone" placeholder="Phone / Mobile">
+<input id="email" placeholder="E-mail Id">
 
 <label>Upload Photo</label>
 <input type="file" id="photo">
 
-<h3>Hobby</h3>
-<input id="hobby">
+<h3>Hobbies</h3>
+
+<div id="hobbyBox" class="hobby-box">
+  <div class="hobby-item" onclick="toggleHobby(this)">📘 Reading</div>
+<div class="hobby-item" onclick="toggleHobby(this)">✍️ Writing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📝 Journaling</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎨 Drawing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🖌️ Painting</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🖊️ Calligraphy</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🧵 Sewing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🧶 Knitting</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🏺 Pottery</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📐 Origami</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🎤 Singing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎸 Guitar</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎹 Piano</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🥁 Drums</div>
+<div class="hobby-item" onclick="toggleHobby(this)">💃 Dancing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎭 Acting</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">💻 Coding</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🌐 Web Development</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📱 App Development</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎮 Gaming</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎥 Video Editing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📸 Photography</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🤖 AI Learning</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🏃 Running</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🏋️ Gym</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🧘 Yoga</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🚴 Cycling</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🏏 Cricket</div>
+<div class="hobby-item" onclick="toggleHobby(this)">⚽ Football</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🌱 Gardening</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🏕️ Camping</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🏞️ Traveling</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎣 Fishing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🦜 Bird Watching</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🍳 Cooking</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🍰 Baking</div>
+<div class="hobby-item" onclick="toggleHobby(this)">☕ Coffee Making</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">♟️ Chess</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🧩 Puzzle Solving</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎲 Board Games</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🗣️ Public Speaking</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🎙️ Podcasting</div>
+<div class="hobby-item" onclick="toggleHobby(this)">🧑‍🏫 Teaching</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">📈 Stock Market Learning</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📱 Digital Marketing</div>
+<div class="hobby-item" onclick="toggleHobby(this)">✉️ Freelancing</div>
+
+<div class="hobby-item" onclick="toggleHobby(this)">🧘 Meditation</div>
+<div class="hobby-item" onclick="toggleHobby(this)">📿 Spiritual Reading</div>
+
+  <div class="hobby-item" onclick="showOtherHobby()">➕ Other</div>
+</div>
+
+<!-- Other hobby input (hidden) -->
+<div id="otherHobbyBox" style="display:none; margin-top:10px;">
+  <input id="otherHobbyInput" placeholder="Enter your hobby">
+  <button type="button" onclick="addOtherHobby()">Add</button>
+</div>
 
 <h3>Experience</h3>
-<select id="exp" onchange="expText.style.display=this.value=='yes'?'block':'none'">
+<select id="exp" onchange="expText.style.display=this.value==='yes'?'block':'none'">
 <option value="no">No</option>
 <option value="yes">Yes</option>
 </select>
 <textarea id="expText" placeholder="Write experience" style="display:none"></textarea>
 
 <h3>Educational Qualification</h3>
-<textarea id="qualification" placeholder="Write qualification details"></textarea>
+<table id="eduTable">
+<tr>
+<th>Qualification</th>
+<th>Year</th>
+<th>Board / University</th>
+<th>Subject</th>
+<th>Marks</th>
+<th>% / CGPA</th>
+</tr>
+<tr>
+<td>
+<select class="eduQual" onchange="toggleOtherEdu(this)">
+  <option>Upper Primary / Middle School (class 8)</option>
+  <option>Secondary School (Class 10)</option>
+  <option>Higher Secondary (Class 12)</option>
+  <option>SSC (10th)</option>
+  <option>HSC (12th)</option>
+  <option>PUC</option>
+  <option>ISC</option>
+  <option>ICSE</option>
+  <option>NIOS</option>
+
+  <!-- Certificate Courses -->
+  <option>Certificate Course</option>
+  <option>Computer Certificate</option>
+  <option>ITI Certificate</option>
+  <option>Skill Development Certificate</option>
+  <option>Vocational Certificate</option>
+  <option>Professional Certificate</option>
+
+  <!-- Diploma -->
+  <option>Diploma</option>
+  <option>Polytechnic Diploma</option>
+  <option>Diploma in Engineering</option>
+  <option>Diploma in Computer Applications (DCA)</option>
+  <option>Diploma in Information Technology</option>
+  <option>Diploma in Education (D.El.Ed)</option>
+  <option>Diploma in Nursing</option>
+  <option>Diploma in Pharmacy</option>
+
+  <!-- Undergraduate (Bachelor Degree) -->
+  <option>Bachelor of Arts (BA)</option>
+  <option>Bachelor of Science (BSc)</option>
+  <option>Bachelor of Commerce (BCom)</option>
+  <option>Bachelor of Computer Applications (BCA)</option>
+  <option>Bachelor of Business Administration (BBA)</option>
+  <option>Bachelor of Technology (BTech)</option>
+  <option>Bachelor of Engineering (BE)</option>
+  <option>Bachelor of Education (BEd)</option>
+  <option>Bachelor of Law (LLB)</option>
+  <option>Bachelor of Pharmacy (BPharm)</option>
+  <option>Bachelor of Nursing (BSc Nursing)</option>
+  <option>Bachelor of Social Work (BSW)</option>
+  <option>Bachelor of Fine Arts (BFA)</option>
+  <option>Bachelor of Journalism & Mass Communication</option>
+
+  <!-- Professional / Medical -->
+  <option>MBBS</option>
+  <option>BDS</option>
+  <option>BAMS</option>
+  <option>BHMS</option>
+  <option>BUMS</option>
+  <option>BVSc</option>
+  <option>BNYS</option>
+
+  <!-- Postgraduate (Master Degree) -->
+  <option>Master of Arts (MA)</option>
+  <option>Master of Science (MSc)</option>
+  <option>Master of Commerce (MCom)</option>
+  <option>Master of Computer Applications (MCA)</option>
+  <option>Master of Business Administration (MBA)</option>
+  <option>Master of Technology (MTech)</option>
+  <option>Master of Engineering (ME)</option>
+  <option>Master of Education (MEd)</option>
+  <option>Master of Law (LLM)</option>
+  <option>Master of Pharmacy (MPharm)</option>
+  <option>Master of Social Work (MSW)</option>
+  <option>Master of Journalism</option>
+
+  <!-- PG Diploma -->
+  <option>Post Graduate Diploma</option>
+  <option>PG Diploma in Management (PGDM)</option>
+  <option>PG Diploma in Computer Applications (PGDCA)</option>
+  <option>PG Diploma in Education</option>
+
+  <!-- Doctorate -->
+  <option>PhD (Doctor of Philosophy)</option>
+  <option>MPhil</option>
+  <option>Doctor of Medicine (MD)</option>
+  <option>Doctor of Surgery (MS)</option>
+  <option>Doctorate</option>
+
+  <!-- Other / Special -->
+  <option>Distance Education Degree</option>
+  <option>Online Degree</option>
+  <option>Open University Degree</option>
+  <option>Professional Degree</option>
+  <option value="other">Other</option>
+</select>
+
+<input type="text"
+       class="otherEduInput"
+       placeholder="Enter qualification"
+       style="display:none; width:140px;">
+
+
+</td>
+<td><input></td><td><input></td><td><input></td><td><input></td><td><input></td>
+</tr>
+</table>
+<button onclick="addEdu()">Add More</button>
 
 <h3>Extra Qualification</h3>
-<input id="extra">
+<table id="extraTable">
+<tr>
+<th>Course / Training</th>
+<th>Institute</th>
+<th>Year</th>
+</tr>
+<tr>
+<td><input></td><td><input></td><td><input></td>
+</tr>
+</table>
+<button onclick="addExtra()">Add More</button>
 
 <h3>Skills</h3>
-<input id="skill">
 
-<h3>Known Languages</h3>
-<div>
-<input id="lang1" placeholder="Language name">
-<label><input type="checkbox" id="l1r"> Read</label>
-<label><input type="checkbox" id="l1w"> Write</label>
-<label><input type="checkbox" id="l1s"> Speak</label>
+<div id="skillBox">
+
+  <div class="skill-row">
+    <select class="skillName" onchange="toggleOtherSkill(this)">
+  <!-- Office & Computer -->
+  <option>MS Word</option>
+  <option>MS Excel</option>
+  <option>MS PowerPoint</option>
+  <option>MS Outlook</option>
+  <option>Google Docs</option>
+  <option>Google Sheets</option>
+  <option>Google Slides</option>
+  <option>Typing (English)</option>
+  <option>Typing (Bengali)</option>
+  <option>Data Entry</option>
+
+  <!-- Programming & IT -->
+  <option>C Programming</option>
+  <option>C++</option>
+  <option>Java</option>
+  <option>Python</option>
+  <option>JavaScript</option>
+  <option>HTML</option>
+  <option>CSS</option>
+  <option>Bootstrap</option>
+  <option>React JS</option>
+  <option>Node JS</option>
+  <option>PHP</option>
+  <option>MySQL</option>
+  <option>MongoDB</option>
+  <option>Web Development</option>
+  <option>App Development</option>
+  <option>Game Development</option>
+  <option>Software Testing</option>
+  <option>Ethical Hacking</option>
+  <option>Cyber Security</option>
+  <option>AI / Machine Learning</option>
+  <option>Data Science</option>
+
+  <!-- Design & Creative -->
+  <option>Photoshop</option>
+  <option>Illustrator</option>
+  <option>CorelDRAW</option>
+  <option>Canva</option>
+  <option>UI / UX Design</option>
+  <option>Graphic Design</option>
+  <option>Video Editing</option>
+  <option>Photo Editing</option>
+  <option>Animation</option>
+  <option>3D Modeling</option>
+  <option>Cinematography</option>
+  <option>Photography</option>
+
+  <!-- Digital Marketing -->
+  <option>Digital Marketing</option>
+  <option>SEO</option>
+  <option>SEM</option>
+  <option>Social Media Marketing</option>
+  <option>Content Marketing</option>
+  <option>Email Marketing</option>
+  <option>Google Ads</option>
+  <option>Facebook Ads</option>
+  <option>Affiliate Marketing</option>
+  <option>Influencer Marketing</option>
+
+  <!-- Language Skills -->
+  <option>English Speaking</option>
+  <option>English Writing</option>
+  <option>Hindi Speaking</option>
+  <option>Bengali Speaking</option>
+  <option>Bengali Writing</option>
+  <option>Translation</option>
+  <option>Content Writing</option>
+  <option>Copywriting</option>
+  <option>Proofreading</option>
+
+  <!-- Soft Skills -->
+  <option>Communication Skills</option>
+  <option>Public Speaking</option>
+  <option>Presentation Skills</option>
+  <option>Leadership</option>
+  <option>Teamwork</option>
+  <option>Problem Solving</option>
+  <option>Critical Thinking</option>
+  <option>Time Management</option>
+  <option>Decision Making</option>
+  <option>Innovative Thinking</option>
+  <option>Creativity</option>
+  <option>Adaptability</option>
+
+  <!-- Business & Finance -->
+  <option>Accounting</option>
+  <option>Tally</option>
+  <option>GST</option>
+  <option>Bookkeeping</option>
+  <option>Stock Market</option>
+  <option>Trading</option>
+  <option>Investment Analysis</option>
+  <option>Business Management</option>
+  <option>Entrepreneurship</option>
+  <option>Sales</option>
+  <option>Marketing</option>
+
+  <!-- Technical / Trade -->
+  <option>Computer Hardware</option>
+  <option>Networking</option>
+  <option>CCTV Installation</option>
+  <option>Mobile Repairing</option>
+  <option>Electrician</option>
+  <option>Plumbing</option>
+  <option>AC Technician</option>
+  <option>Welding</option>
+  <option>AutoCAD</option>
+
+  <!-- Education & Teaching -->
+  <option>Teaching</option>
+  <option>Online Tutoring</option>
+  <option>Curriculum Design</option>
+  <option>Student Counseling</option>
+
+  <!-- Media & Content -->
+  <option>Blogging</option>
+  <option>Vlogging</option>
+  <option>YouTube Content Creation</option>
+  <option>Podcasting</option>
+  <option>Script Writing</option>
+  <option>Storytelling</option>
+
+  <!-- Personal Development -->
+  <option>Research Skills</option>
+  <option>Analytical Skills</option>
+  <option>Negotiation</option>
+  <option>Emotional Intelligence</option>
+  <option>Stress Management</option>
+<option value="other">Other</option>
+    </select>
+
+    <input type="text"
+           class="otherSkillInput"
+           placeholder="Enter skill"
+           style="display:none; width:140px;">
+
+    <select class="skillPercent">
+  <option value="10">10%</option>
+  <option value="20">20%</option>
+  <option value="30">30%</option>
+  <option value="40">40%</option>
+  <option value="50">50%</option>
+  <option value="60">60%</option>
+  <option value="70">70%</option>
+  <option value="80">80%</option>
+  <option value="90">90%</option>
+  <option value="100">100%</option>
+</select>
+  </div>
+
 </div>
 
-<br>
+<button type="button" onclick="addSkill()">Add More Skill</button>
+
+<h3>Known Languages</h3>
+<div id="langBox">
+  <div class="langRow">
+    <select class="langName">
+     
+  <!-- Scheduled Languages (22) -->
+  <option>Assamese (অসমীয়া)</option>
+  <option>Bengali (বাংলা)</option>
+  <option>Bodo</option>
+  <option>Dogri</option>
+  <option>Gujarati (ગુજરાતી)</option>
+  <option>Hindi (हिन्दी)</option>
+  <option>Kannada (ಕನ್ನಡ)</option>
+  <option>Kashmiri (کٲشُر)</option>
+  <option>Konkani</option>
+  <option>Maithili</option>
+  <option>Malayalam (മലയാളം)</option>
+  <option>Manipuri / Meitei</option>
+  <option>Marathi (मराठी)</option>
+  <option>Nepali</option>
+  <option>Odia (ଓଡ଼ିଆ)</option>
+  <option>Punjabi (ਪੰਜਾਬੀ)</option>
+  <option>Sanskrit (संस्कृतम्)</option>
+  <option>Santali</option>
+  <option>Sindhi</option>
+  <option>Tamil (தமிழ்)</option>
+  <option>Telugu (తెలుగు)</option>
+  <option>Urdu (اردو)</option>
+
+  <!-- Major Regional Languages -->
+  <option>Rajasthani</option>
+  <option>Bhojpuri</option>
+  <option>Awadhi</option>
+  <option>Magahi</option>
+  <option>Chhattisgarhi</option>
+  <option>Haryanvi</option>
+  <option>Braj Bhasha</option>
+  <option>Tulu</option>
+  <option>Coorgi (Kodava)</option>
+  <option>Saurashtra</option>
+  <option>Mewari</option>
+  <option>Marwari</option>
+  <option>Bagheli</option>
+  <option>Bundeli</option>
+  <option>Kumaoni</option>
+  <option>Garhwali</option>
+
+  <!-- Eastern & North-Eastern -->
+  <option>Sylheti</option>
+  <option>Rajbanshi</option>
+  <option>Bishnupriya Manipuri</option>
+  <option>Mizo (Lushai)</option>
+  <option>Khasi</option>
+  <option>Garo</option>
+  <option>Jaintia</option>
+  <option>Naga Languages</option>
+  <option>Ao</option>
+  <option>Angami</option>
+  <option>Dimasa</option>
+  <option>Kokborok</option>
+
+  <!-- Tribal / Indigenous Languages -->
+  <option>Gondi</option>
+  <option>Bhili</option>
+  <option>Korku</option>
+  <option>Ho</option>
+  <option>Mundari</option>
+  <option>Kharia</option>
+  <option>Koya</option>
+  <option>Kui</option>
+  <option>Kuvi</option>
+  <option>Halbi</option>
+  <option>Lambadi / Banjara</option>
+
+  <!-- Southern Local Languages -->
+  <option>Badaga</option>
+  <option>Irula</option>
+  <option>Toda</option>
+  <option>Kurukh (Oraon)</option>
+  <option>Yerukala</option>
+
+  <!-- Andaman & Others -->
+  <option>Nicobarese</option>
+  <option>Shompen</option>
+
+</select>
+
+    </select>
+    <label><input type="checkbox" class="r"> Read</label>
+    <label><input type="checkbox" class="w"> Write</label>
+    <label><input type="checkbox" class="s"> Speak</label>
+  </div>
+</div>
+<button onclick="addLang()">Add More</button>
+
+<br><br>
 <button onclick="generateAndPrint()">Generate & Print</button>
+
+<!-- ================= CV OUTPUT ================= -->
 
 <div id="cv">
 
-<div style="display:flex;justify-content:space-between">
-<div>
-<div class="name" id="cvName"></div>
-<div class="small"><b>C/O :</b> <span id="cvFather"></span></div>
-<div class="small" id="cvContact"></div>
-<div class="small" id="cvAddress"></div>
+<div class="cv-name" id="cvName"> </div>
+
+<div class="header">
+<div class="header-left">
+  <div class="header-row"><div class="header-label">C/O</div><div class="header-colon">:</div><div class="header-value" id="cvFather"></div></div>
+  <div class="header-row"><div class="header-label">Date of Birth</div><div class="header-colon">:</div><div class="header-value" id="cvDob"></div></div>
+  <div class="header-row"><div class="header-label">Permanent Address</div><div class="header-colon">:</div><div class="header-value" id="cvAddress"></div></div>
+  <div class="header-row"><div class="header-label">Phone / Mobile</div><div class="header-colon">:</div><div class="header-value" id="cvPhone"></div></div>
+  <div class="header-row"><div class="header-label">E-mail Id</div><div class="header-colon">:</div><div class="header-value" id="cvEmail"></div></div>
 </div>
 <img id="cvPhoto" class="photo">
 </div>
 
-<div class="section"><b>Hobby :</b> <span id="cvHobby"></span></div>
+<div class="section">
+<div class="section-line"></div>
+<div class="section-title">Hobby</div>
+<div id="cvHobby"></div>
+</div>
 
 <div id="cvExpSection" class="section" style="display:none">
-<b>Experience :</b>
+<div class="section-line"></div>
+<div class="section-title">Experience</div>
 <div id="cvExp"></div>
 </div>
 
-<div class="section"><b>Educational Qualification :</b>
-<div id="cvQualification"></div>
-</div>
-
-<div class="section"><b>Extra Qualification :</b>
-<div id="cvExtra"></div>
-</div>
-
-<div class="section"><b>Skills :</b>
-<div id="cvSkill"></div>
-</div>
-
-<div class="section"><b>Known Languages :</b>
-<div id="cvLang"></div>
+<div class="section">
+<div class="section-line"></div>
+<div class="section-title">Educational Qualifications</div>
+<table id="cvEdu"></table>
 </div>
 
 <div class="section">
-<b>Declaration</b>
+<div class="section-line"></div>
+<div class="section-title">Extra Qualification</div>
+<table id="cvExtraTable"></table>
+</div>
+
+<div class="section">
+<div class="section-line"></div>
+<div class="section-title">Skills</div>
+<div id="cvSkill"></div>
+</div>
+
+<div class="section">
+<div class="section-line"></div>
+<div class="section-title">Known Languages</div>
+<pre id="cvLang"></pre>
+</div>
+
+<div class="section">
+<div class="section-line"></div>
+<div class="section-title">Declaration</div>
 <p>
-All the information given above is true and correct to the best of my knowledge and belief.
+All information in this resume is true and correct to the best of my knowledge and belief.
 </p>
 </div>
 
 <br>
 <div style="display:flex;justify-content:space-between">
-<div>
-<b>Date :</b> ___________<br>
-<b>Place :</b> ___________
-</div>
-<div>
-<b>Signature</b><br><br>
-_____________
-</div>
+<div><b>Date :</b> ___________<br><b>Place :</b> ___________</div>
+<div><b>Signature</b><br><br>_____________</div>
 </div>
 
 </div>
 </div>
 
 <script>
+function addEdu(){
+  let r = eduTable.insertRow();
+  r.innerHTML = `
+  <td>
+    <select class="eduQual" onchange="toggleOtherEdu(this)">
+  <option>Upper Primary / Middle School (class 8)</option>
+  <option>Secondary School (Class 10)</option>
+  <option>Higher Secondary (Class 12)</option>
+  <option>SSC (10th)</option>
+  <option>HSC (12th)</option>
+  <option>PUC</option>
+  <option>ISC</option>
+  <option>ICSE</option>
+  <option>NIOS</option>
+
+  <!-- Certificate Courses -->
+  <option>Certificate Course</option>
+  <option>Computer Certificate</option>
+  <option>ITI Certificate</option>
+  <option>Skill Development Certificate</option>
+  <option>Vocational Certificate</option>
+  <option>Professional Certificate</option>
+
+  <!-- Diploma -->
+  <option>Diploma</option>
+  <option>Polytechnic Diploma</option>
+  <option>Diploma in Engineering</option>
+  <option>Diploma in Computer Applications (DCA)</option>
+  <option>Diploma in Information Technology</option>
+  <option>Diploma in Education (D.El.Ed)</option>
+  <option>Diploma in Nursing</option>
+  <option>Diploma in Pharmacy</option>
+
+  <!-- Undergraduate (Bachelor Degree) -->
+  <option>Bachelor of Arts (BA)</option>
+  <option>Bachelor of Science (BSc)</option>
+  <option>Bachelor of Commerce (BCom)</option>
+  <option>Bachelor of Computer Applications (BCA)</option>
+  <option>Bachelor of Business Administration (BBA)</option>
+  <option>Bachelor of Technology (BTech)</option>
+  <option>Bachelor of Engineering (BE)</option>
+  <option>Bachelor of Education (BEd)</option>
+  <option>Bachelor of Law (LLB)</option>
+  <option>Bachelor of Pharmacy (BPharm)</option>
+  <option>Bachelor of Nursing (BSc Nursing)</option>
+  <option>Bachelor of Social Work (BSW)</option>
+  <option>Bachelor of Fine Arts (BFA)</option>
+  <option>Bachelor of Journalism & Mass Communication</option>
+
+  <!-- Professional / Medical -->
+  <option>MBBS</option>
+  <option>BDS</option>
+  <option>BAMS</option>
+  <option>BHMS</option>
+  <option>BUMS</option>
+  <option>BVSc</option>
+  <option>BNYS</option>
+
+  <!-- Postgraduate (Master Degree) -->
+  <option>Master of Arts (MA)</option>
+  <option>Master of Science (MSc)</option>
+  <option>Master of Commerce (MCom)</option>
+  <option>Master of Computer Applications (MCA)</option>
+  <option>Master of Business Administration (MBA)</option>
+  <option>Master of Technology (MTech)</option>
+  <option>Master of Engineering (ME)</option>
+  <option>Master of Education (MEd)</option>
+  <option>Master of Law (LLM)</option>
+  <option>Master of Pharmacy (MPharm)</option>
+  <option>Master of Social Work (MSW)</option>
+  <option>Master of Journalism</option>
+
+  <!-- PG Diploma -->
+  <option>Post Graduate Diploma</option>
+  <option>PG Diploma in Management (PGDM)</option>
+  <option>PG Diploma in Computer Applications (PGDCA)</option>
+  <option>PG Diploma in Education</option>
+
+  <!-- Doctorate -->
+  <option>PhD (Doctor of Philosophy)</option>
+  <option>MPhil</option>
+  <option>Doctor of Medicine (MD)</option>
+  <option>Doctor of Surgery (MS)</option>
+  <option>Doctorate</option>
+
+  <!-- Other / Special -->
+  <option>Distance Education Degree</option>
+  <option>Online Degree</option>
+  <option>Open University Degree</option>
+  <option>Professional Degree</option>   <option value="other">Other</option>
+    </select>
+
+    <input type="text"
+           class="otherEduInput"
+           placeholder="Enter qualification"
+           style="display:none; width:140px;">
+  </td>
+
+  <td><input></td>
+  <td><input></td>
+  <td><input></td>
+  <td><input></td>
+  <td><input></td>
+  `;
+}
+function addExtra(){
+ let r=extraTable.insertRow();
+ r.innerHTML=`<td><input></td><td><input></td><td><input></td>`;
+}
+function addLang(){
+ let d=document.createElement("div");
+ d.className="langRow";
+ d.innerHTML=`
+ <select class="langName">  <option>Assamese (অসমীয়া)</option>
+  <option>Bengali (বাংলা)</option>
+  <option>Bodo</option>
+  <option>Dogri</option>
+  <option>Gujarati (ગુજરાતી)</option>
+  <option>Hindi (हिन्दी)</option>
+  <option>Kannada (ಕನ್ನಡ)</option>
+  <option>Kashmiri (کٲشُر)</option>
+  <option>Konkani</option>
+  <option>Maithili</option>
+  <option>Malayalam (മലയാളം)</option>
+  <option>Manipuri / Meitei</option>
+  <option>Marathi (मराठी)</option>
+  <option>Nepali</option>
+  <option>Odia (ଓଡ଼ିଆ)</option>
+  <option>Punjabi (ਪੰਜਾਬੀ)</option>
+  <option>Sanskrit (संस्कृतम्)</option>
+  <option>Santali</option>
+  <option>Sindhi</option>
+  <option>Tamil (தமிழ்)</option>
+  <option>Telugu (తెలుగు)</option>
+  <option>Urdu (اردو)</option>
+
+  <!-- Major Regional Languages -->
+  <option>Rajasthani</option>
+  <option>Bhojpuri</option>
+  <option>Awadhi</option>
+  <option>Magahi</option>
+  <option>Chhattisgarhi</option>
+  <option>Haryanvi</option>
+  <option>Braj Bhasha</option>
+  <option>Tulu</option>
+  <option>Coorgi (Kodava)</option>
+  <option>Saurashtra</option>
+  <option>Mewari</option>
+  <option>Marwari</option>
+  <option>Bagheli</option>
+  <option>Bundeli</option>
+  <option>Kumaoni</option>
+  <option>Garhwali</option>
+
+  <!-- Eastern & North-Eastern -->
+  <option>Sylheti</option>
+  <option>Rajbanshi</option>
+  <option>Bishnupriya Manipuri</option>
+  <option>Mizo (Lushai)</option>
+  <option>Khasi</option>
+  <option>Garo</option>
+  <option>Jaintia</option>
+  <option>Naga Languages</option>
+  <option>Ao</option>
+  <option>Angami</option>
+  <option>Dimasa</option>
+  <option>Kokborok</option>
+
+  <!-- Tribal / Indigenous Languages -->
+  <option>Gondi</option>
+  <option>Bhili</option>
+  <option>Korku</option>
+  <option>Ho</option>
+  <option>Mundari</option>
+  <option>Kharia</option>
+  <option>Koya</option>
+  <option>Kui</option>
+  <option>Kuvi</option>
+  <option>Halbi</option>
+  <option>Lambadi / Banjara</option>
+
+  <!-- Southern Local Languages -->
+  <option>Badaga</option>
+  <option>Irula</option>
+  <option>Toda</option>
+  <option>Kurukh (Oraon)</option>
+  <option>Yerukala</option>
+
+  <!-- Andaman & Others -->
+  <option>Nicobarese</option>
+  <option>Shompen</option></select>
+ <label><input type="checkbox" class="r"> Read</label>
+ <label><input type="checkbox" class="w"> Write</label>
+ <label><input type="checkbox" class="s"> Speak</label>`;
+ langBox.appendChild(d);
+}
+
 function generateAndPrint(){
-cvName.innerText=name.value;
-cvFather.innerText=father.value;
-cvContact.innerText=[phone.value,email.value].filter(Boolean).join(" | ");
-cvAddress.innerText=address.value;
-cvHobby.innerText=hobby.value;
-cvQualification.innerText=qualification.value;
-cvExtra.innerText=extra.value;
-cvSkill.innerText=skill.value;
 
-/* Experience */
-if(exp.value=="yes"){
-cvExpSection.style.display="block";
-cvExp.innerText=expText.value;
-}else{
-cvExpSection.style.display="none";
+  /* ===== NAME & BASIC DETAILS ===== */
+  document.getElementById("cvName").innerText =
+    (document.getElementById("name").value || "").toUpperCase();
+
+  cvFather.innerText  = father.value || "";
+  cvAddress.innerText = address.value || "";
+  cvPhone.innerText   = phone.value || "";
+  cvEmail.innerText   = email.value || "";
+
+  /* ===== DOB (DAY MONTH YEAR) ===== */
+  if(typeof dobDay !== "undefined"){
+    cvDob.innerText =
+      [dobDay.value, dobMonth.value, dobYear.value].filter(Boolean).join(" ");
+  }
+
+  /* ===== HOBBY ===== */
+  let hobbies = [];
+  document.querySelectorAll(".hobby-item.selected").forEach(h=>{
+    hobbies.push(h.innerText);
+  });
+  cvHobby.innerText = hobbies.join(", ");
+
+  /* ===== EXPERIENCE ===== */
+  if(exp && exp.value === "yes"){
+    cvExpSection.style.display = "block";
+    cvExp.innerText = expText.value || "";
+  }else{
+    cvExpSection.style.display = "none";
+  }
+
+/* ===== EDUCATIONAL QUALIFICATION (FIXED) ===== */
+let er = document.getElementById("eduTable").rows;
+let eduHTML = `
+<tr>
+  <th>Qualification</th>
+  <th>Year</th>
+  <th>Board / University</th>
+  <th>Subject</th>
+  <th>Marks</th>
+  <th>% / CGPA</th>
+</tr>
+`;
+
+for(let i = 1; i < er.length; i++){
+  let c = er[i].cells;
+
+  let sel   = c[0].querySelector(".eduQual");
+  let other = c[0].querySelector(".otherEduInput");
+
+  let qual = "";
+  if(sel){
+    if(sel.value === "other"){
+      qual = other && other.value ? other.value : "";
+    }else{
+      qual = sel.value;
+    }
+  }
+
+  eduHTML += `
+    <tr>
+      <td>${qual}</td>
+      <td>${c[1].querySelector("input").value}</td>
+      <td>${c[2].querySelector("input").value}</td>
+      <td>${c[3].querySelector("input").value}</td>
+      <td>${c[4].querySelector("input").value}</td>
+      <td>${c[5].querySelector("input").value}</td>
+    </tr>
+  `;
 }
 
-/* Languages */
-let lang="";
-if(lang1.value){
-lang+=lang1.value+" ";
-lang+=l1r.checked?"Read ":"";
-lang+=l1w.checked?"Write ":"";
-lang+=l1s.checked?"Speak ":"";
-}
-cvLang.innerText=lang;
+document.getElementById("cvEdu").innerHTML = eduHTML;
 
-/* Photo */
-let f=photo.files[0];
-if(f){
-let r=new FileReader();
-r.onload=e=>cvPhoto.src=e.target.result;
-r.readAsDataURL(f);
+
+  /* ===== EXTRA QUALIFICATION ===== */
+  let xr = document.getElementById("extraTable").rows;
+  let extraHTML = `<tr>${xr[0].innerHTML}</tr>`;
+
+  for(let i=1; i<xr.length; i++){
+    let c = xr[i].cells;
+    extraHTML += `
+      <tr>
+        <td>${c[0].querySelector("input").value}</td>
+        <td>${c[1].querySelector("input").value}</td>
+        <td>${c[2].querySelector("input").value}</td>
+      </tr>
+    `;
+  }
+  cvExtraTable.innerHTML = extraHTML;
+
+  /* ===== SKILLS (WITH OTHER) ===== */
+  let skillHTML = "";
+  document.querySelectorAll(".skill-row").forEach(r=>{
+    let select = r.querySelector(".skillName");
+    let other  = r.querySelector(".otherSkillInput");
+    let percent= r.querySelector(".skillPercent").value;
+
+    let name = (select.value === "other" && other && other.value)
+               ? other.value
+               : select.value;
+
+    skillHTML += `
+      <div class="skill-output">
+        <b>${name}</b>
+        <div class="skill-bar">
+          <div class="skill-fill" style="width:${percent}%"></div>
+        </div>
+      </div>
+    `;
+  });
+  cvSkill.innerHTML = skillHTML;
+
+  /* ===== LANGUAGE ===== */
+  let langText = "";
+  document.querySelectorAll(".langRow").forEach(r=>{
+    let n = r.querySelector(".langName").value;
+    let a = [];
+    if(r.querySelector(".r").checked) a.push("Read");
+    if(r.querySelector(".w").checked) a.push("Write");
+    if(r.querySelector(".s").checked) a.push("Speak");
+    if(a.length) langText += n+" – "+a.join(", ")+"\n";
+  });
+  cvLang.innerText = langText;
+
+  /* ===== PHOTO ===== */
+  let f = photo.files[0];
+  if(f){
+    let rd = new FileReader();
+    rd.onload = e => cvPhoto.src = e.target.result;
+    rd.readAsDataURL(f);
+  }
+
+  /* ===== SHOW & PRINT ===== */
+  cv.style.display = "block";
+  setTimeout(()=>window.print(),300);
 }
 
-/* Print only CV */
-cv.style.display="block";
-setTimeout(()=>window.print(),300);
-}
 </script>
 
 </body>
