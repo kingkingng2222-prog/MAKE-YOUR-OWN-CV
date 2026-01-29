@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -181,7 +180,7 @@ th,td{padding:6px}
 <body>
 
 <div class="container">
-<h2>Online CV Builder</h2>
+<h2>Online CV Builder by N.G</h2>
 
 <input id="name" placeholder="Full Name">
 <input id="father" placeholder="C/O (Father's Name)">
@@ -797,6 +796,7 @@ function toggleOtherSkill(selectEl){
      
   <!-- Scheduled Languages (22) -->
   <option>Assamese (অসমীয়া)</option>
+<option>English</option>
   <option>Bengali (বাংলা)</option>
   <option>Bodo</option>
   <option>Dogri</option>
@@ -898,9 +898,9 @@ function toggleOtherSkill(selectEl){
 <div class="header-left">
   <div class="header-row"><div class="header-label">C/O</div><div class="header-colon">:</div><div class="header-value" id="cvFather"></div></div>
   <div class="header-row"><div class="header-label">Date of Birth</div><div class="header-colon">:</div><div class="header-value" id="cvDob"></div></div>
-  <div class="header-row"><div class="header-label">Permanent Address</div><div class="header-colon">:</div><div class="header-value" id="cvAddress"></div></div>
-  <div class="header-row"><div class="header-label">Phone / Mobile</div><div class="header-colon">:</div><div class="header-value" id="cvPhone"></div></div>
-  <div class="header-row"><div class="header-label">E-mail Id</div><div class="header-colon">:</div><div class="header-value" id="cvEmail"></div></div>
+  <div class="header-row"><div class="header-label">📍Permanent Address</div><div class="header-colon">:</div><div class="header-value" id="cvAddress"></div></div>
+  <div class="header-row"><div class="header-label">📞Phone / Mobile</div><div class="header-colon">:</div><div class="header-value" id="cvPhone"></div></div>
+  <div class="header-row"><div class="header-label">✉️E-mail Id</div><div class="header-colon">:</div><div class="header-value" id="cvEmail"></div></div>
 </div>
 <img id="cvPhoto" class="photo">
 </div>
@@ -913,31 +913,31 @@ function toggleOtherSkill(selectEl){
 
 <div id="cvExpSection" class="section" style="display:none">
 <div class="section-line"></div>
-<div class="section-title">Experience</div>
+<div class="section-title">💼Experience</div>
 <div id="cvExp"></div>
 </div>
 
 <div class="section">
 <div class="section-line"></div>
-<div class="section-title">Educational Qualifications</div>
+<div class="section-title">🎓 Educational Qualifications</div>
 <table id="cvEdu"></table>
 </div>
 
 <div class="section">
 <div class="section-line"></div>
-<div class="section-title">Extra Qualification</div>
+<div class="section-title">🎯Extra Qualification</div>
 <table id="cvExtraTable"></table>
 </div>
 
 <div class="section">
 <div class="section-line"></div>
-<div class="section-title">Skills</div>
+<div class="section-title">🛠️Skills</div>
 <div id="cvSkill"></div>
 </div>
 
 <div class="section">
 <div class="section-line"></div>
-<div class="section-title">Known Languages</div>
+<div class="section-title">🗣️Known Languages</div>
 <pre id="cvLang"></pre>
 </div>
 
@@ -1073,7 +1073,8 @@ function addLang(){
  d.className="langRow";
  d.innerHTML=`
  <select class="langName">  <option>Assamese (অসমীয়া)</option>
-  <option>Bengali (বাংলা)</option>
+ <option>English</option>
+ <option>Bengali (বাংলা)</option>
   <option>Bodo</option>
   <option>Dogri</option>
   <option>Gujarati (ગુજરાતી)</option>
