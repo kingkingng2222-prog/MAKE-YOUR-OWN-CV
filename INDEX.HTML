@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CV Builder</title>
+
+<style>
+body{font-family:Arial;background:#eee}
+.container{width:1000px;margin:auto;background:#fff;padding:20px}
+input,textarea,select{width:100%;padding:6px;margin:4px 0}
+button{padding:10px 16px;background:#000;color:#fff;border:none;cursor:pointer}
+
+#cv{display:none;padding:20px}
+.name{font-size:30px;font-weight:bold;text-transform:uppercase}
+.small{font-size:14px}
+.section{margin-top:12px}
+.photo{width:120px;height:140px;border:1px solid #000;object-fit:cover}
+
+@media print{
+body{background:#fff}
+.container>*:not(#cv){display:none}
+#cv{display:block}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Online CV Builder</h2>
+
+<input id="name" placeholder="Full Name">
+<input id="father" placeholder="C/O (Father's Name)">
+<input id="phone" placeholder="Phone">
+<input id="email" placeholder="Email">
+<textarea id="address" placeholder="Address"></textarea>
+
+<label>Upload Photo</label>
+<input type="file" id="photo">
+
+<h3>Hobby</h3>
+<input id="hobby">
+
+<h3>Experience</h3>
+<select id="exp" onchange="expText.style.display=this.value=='yes'?'block':'none'">
+<option value="no">No</option>
+<option value="yes">Yes</option>
+</select>
+<textarea id="expText" placeholder="Write experience" style="display:none"></textarea>
+
+<h3>Educational Qualification</h3>
+<textarea id="qualification" placeholder="Write qualification details"></textarea>
+
+<h3>Extra Qualification</h3>
+<input id="extra">
+
+<h3>Skills</h3>
+<input id="skill">
+
+<h3>Known Languages</h3>
+<div>
+<input id="lang1" placeholder="Language name">
+<label><input type="checkbox" id="l1r"> Read</label>
+<label><input type="checkbox" id="l1w"> Write</label>
+<label><input type="checkbox" id="l1s"> Speak</label>
+</div>
+
+<br>
+<button onclick="generateAndPrint()">Generate & Print</button>
+
+<div id="cv">
+
+<div style="display:flex;justify-content:space-between">
+<div>
+<div class="name" id="cvName"></div>
+<div class="small"><b>C/O :</b> <span id="cvFather"></span></div>
+<div class="small" id="cvContact"></div>
+<div class="small" id="cvAddress"></div>
+</div>
+<img id="cvPhoto" class="photo">
+</div>
+
+<div class="section"><b>Hobby :</b> <span id="cvHobby"></span></div>
+
+<div id="cvExpSection" class="section" style="display:none">
+<b>Experience :</b>
+<div id="cvExp"></div>
+</div>
+
+<div class="section"><b>Educational Qualification :</b>
+<div id="cvQualification"></div>
+</div>
+
+<div class="section"><b>Extra Qualification :</b>
+<div id="cvExtra"></div>
+</div>
+
+<div class="section"><b>Skills :</b>
+<div id="cvSkill"></div>
+</div>
+
+<div class="section"><b>Known Languages :</b>
+<div id="cvLang"></div>
+</div>
+
+<div class="section">
+<b>Declaration</b>
+<p>
+All the information given above is true and correct to the best of my knowledge and belief.
+</p>
+</div>
+
+<br>
+<div style="display:flex;justify-content:space-between">
+<div>
+<b>Date :</b> ___________<br>
+<b>Place :</b> ___________
+</div>
+<div>
+<b>Signature</b><br><br>
+_____________
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function generateAndPrint(){
+cvName.innerText=name.value;
+cvFather.innerText=father.value;
+cvContact.innerText=[phone.value,email.value].filter(Boolean).join(" | ");
+cvAddress.innerText=address.value;
+cvHobby.innerText=hobby.value;
+cvQualification.innerText=qualification.value;
+cvExtra.innerText=extra.value;
+cvSkill.innerText=skill.value;
+
+/* Experience */
+if(exp.value=="yes"){
+cvExpSection.style.display="block";
+cvExp.innerText=expText.value;
+}else{
+cvExpSection.style.display="none";
+}
+
+/* Languages */
+let lang="";
+if(lang1.value){
+lang+=lang1.value+" ";
+lang+=l1r.checked?"Read ":"";
+lang+=l1w.checked?"Write ":"";
+lang+=l1s.checked?"Speak ":"";
+}
+cvLang.innerText=lang;
+
+/* Photo */
+let f=photo.files[0];
+if(f){
+let r=new FileReader();
+r.onload=e=>cvPhoto.src=e.target.result;
+r.readAsDataURL(f);
+}
+
+/* Print only CV */
+cv.style.display="block";
+setTimeout(()=>window.print(),300);
+}
+</script>
+
+</body>
+</html>
